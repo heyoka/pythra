@@ -10,7 +10,7 @@
 -author("heyoka").
 
 %% API
--export([start_link/0]).
+-export([start_link/0, start_link/1, stop/1]).
 
 -export([
    pythra_call/3, pythra_call/4,
@@ -23,15 +23,20 @@
 
 
 start_link() ->
-   Version = "3",
-   Path = "./python/",
-   Opts = [{python_path, Path}, {python, "python"++Version}],
+   start_link([]).
+start_link(Path) when is_list(Path) ->
+   PythraPath = code:priv_dir(pythra) ++ "/python/",
+   Paths = [PythraPath, Path],
+   Opts = [{python_path, Paths}, {python, "python3"}],
    {ok, Py} = python:start_link(Opts),
    on_start(Py),
    {ok, Py}.
 
 on_start(ProcPid) ->
    python:call(ProcPid, pythra, 'init.setup', []).
+
+stop(P) ->
+   python:stop(P).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% call functions
@@ -140,7 +145,7 @@ func(Python, FuncName, Args, RawKwArgs) when is_atom(FuncName) andalso is_list(A
 
    end;
 func(Python, Module, FuncName, Args) when is_atom(Module) ->
-   func(Python, Module, FuncName, Args);
+   func(Python, Module, FuncName, Args, []);
 func(Python, Callable, Args, RawKwArgs) ->
    KwArgs = pythra_util:proplist_to_binary(RawKwArgs),
    pythra_call(Python, pythra, 'obj.call_callable', [Callable, Args, KwArgs]).
