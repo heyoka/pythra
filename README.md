@@ -38,6 +38,7 @@ Object instantiation and method call
                          10,80,121,99,108,97,115,115,10,113,0,...>>}
     3> pythra:method(P, Obj, get_value).               
     7
+    4> pythra:stop(P).
 
     
     
