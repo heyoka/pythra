@@ -1,8 +1,8 @@
 %%%-------------------------------------------------------------------
 %%% @author heyoka
-%%% @copyright (C) 2019, <COMPANY>
+%%% @copyright (C) 2019
 %%% @doc
-%%%
+%%% for docs see https://github.com/lfex/py
 %%% @end
 %%% Created : 08. Nov 2019 11:14
 %%%-------------------------------------------------------------------
@@ -20,6 +20,7 @@
    method/3, method/4, method/5,
    func/2, func/3, func/4, func/5,
    general_call/6]).
+
 
 start_link() ->
    Version = "3",
@@ -47,7 +48,7 @@ pythra_call(Python, Mod, Func, Args) ->
 %%% Creating Python class instances
 %%%
 init(Python, ModClass) ->
-   {Mod, Class} = pythra_util:split_dotted(ModClass),
+   [Mod, Class] = pythra_util:split_dotted(ModClass),
    init(Python, Mod, Class).
 
 init(Python, ModClass, Args) when is_list(Args) ->

@@ -1,9 +1,39 @@
 pythra
 =====
 
-pythra wraps [erlport/erlport](https://github.com/erlport/erlport) and is inspired by [lfex/py](https://github.com/lfex/py)
+pythra translates the erlport wrapper parts of [lfex/py](https://github.com/lfex/py) to erlang
+
+I did this mainly to make it easy to work with python objects and methods.
+
+Requirements
+------------
+
+    + erlang >= 17
+    + python 3
+    + the python lib cytoolz
+
 
 Build
 -----
 
     $ rebar3 compile
+    
+Use
+---
+    # start
+    $ rebar3 shell
+    
+Object instantiation and method call
+
+    1> {ok, P} = pythra:start_link().            
+    {ok,<0.156.0>}
+    2> Obj = pythra:init(P, 'user.pyclass', 'Pyclass').
+    pyClass __init__
+    {'$erlport.opaque',python,
+                       <<128,2,99,117,115,101,114,46,112,121,99,108,97,115,115,
+                         10,80,121,99,108,97,115,115,10,113,0,...>>}
+    3> pythra:method(P, Obj, get_value).               
+    3
+
+    
+    
