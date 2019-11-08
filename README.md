@@ -5,6 +5,10 @@ pythra translates the erlport wrapper parts of [lfex/py](https://github.com/lfex
 
 I did this mainly to make it easy to work with python objects and methods.
 
+
+Python3 only.
+
+
 Requirements
 ------------
 
