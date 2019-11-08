@@ -1,7 +1,7 @@
 pythra
 =====
 
-An OTP application
+pythra wraps erlport/erlport and is inspired by lfex/py
 
 Build
 -----
