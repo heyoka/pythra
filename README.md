@@ -31,13 +31,13 @@ Object instantiation and method call
 
     1> {ok, P} = pythra:start_link().            
     {ok,<0.156.0>}
-    2> Obj = pythra:init(P, 'user.pyclass', 'Pyclass').
+    2> Obj = pythra:init(P, 'user.pyclass', 'Pyclass', [7]).
     pyClass __init__
     {'$erlport.opaque',python,
                        <<128,2,99,117,115,101,114,46,112,121,99,108,97,115,115,
                          10,80,121,99,108,97,115,115,10,113,0,...>>}
     3> pythra:method(P, Obj, get_value).               
-    3
+    7
 
     
     
