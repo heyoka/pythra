@@ -1,0 +1,126 @@
+%%%-------------------------------------------------------------------
+%%% @author heyoka
+%%% @copyright (C) 2019, <COMPANY>
+%%% @doc
+%%%
+%%% @end
+%%% Created : 08. Nov 2019 11:14
+%%%-------------------------------------------------------------------
+-module(pythra).
+-author("heyoka").
+
+%% API
+-export([start_link/0, pythra_call/3]).
+
+start_link() ->
+   python:start_link().
+
+on_start(ProcPid) ->
+   python:call(ProcPid, pythra, 'init.setup', []).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% call functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% erlport calls
+
+pythra_call(Python, Mod, Func) ->
+   pythra_call(Python, Mod, Func, []).
+
+pythra_call(Python, Mod, Func, Args) ->
+   python:call(Python, Mod, Func, Args).
+
+%%% Creating Python class instances
+%%%
+init(ModClass) ->
+   {Mod, Class} = pythra_util:split_dotted(ModClass),
+   init(Mod, Class).
+
+%%init(ModClass, Args) when is_list(Args) ->
+
+
+init(Module, Class, Args, KwArgs) ->
+   func(Module, Class, Args, KwArgs).
+
+%%% Python object and module constants
+const(Python, Mod, AttrName) when is_atom(Mod) ->
+   Attr = atom_to_binary(Attr, latin1),
+   {Obj, Type} = pythra_call(Python, pythra, 'obj.const', [Mod, Attr]),
+   method(Obj, list_to_atom("__" ++ atom_to_list(Type) ++ "__")).
+
+const(Python, Mod, Func, Type) ->
+   Call = list_to_atom(atom_to_list(Func) ++ ".__" ++ atom_to_list(Type) ++ "__"),
+   pythra_call(Python, Mod, Call).
+
+%%% Python object attributes
+%%
+attr(Python, Obj, AttrName) when is_list(AttrName) ->
+   attr(Python, Obj, list_to_atom(AttrName));
+attr(Python, Obj, AttrName) when is_atom(AttrName) ->
+   Attr = atom_to_binary(AttrName, latin1),
+   pythra_call(Python, pythra, 'obj.attr', [Obj, Attr]).
+
+%%% Python method calls
+%%
+method(Python, Obj, MethodName) ->
+   method(Python, Obj, MethodName, [], []).
+
+method(Python, Obj, MethodName, Args) ->
+   method(Python, Obj, MethodName, Args, []).
+
+method(Python, Obj, MethodName, Args, KwArgs) ->
+   general_call(Python, Obj, MethodName, Args, KwArgs, 'obj.call_method').
+
+%%call_dotten(FuncName) ->
+
+%%% Python module function and function object calls
+%%
+func(FuncName) when is_atom(FuncName) ->
+   case pythra_util:is_dotted(FuncName) of
+      true ->
+         [Func, FuncName1] = pythra_util:split_dotted(FuncName),
+         func(Func, FuncName1);
+      false ->
+         func(FuncName, [], [])
+   end;
+func(Callable) ->
+   func(Callable, [], []).
+
+func(FuncName, Args) when is_atom(FuncName), is_list(Args) ->
+   case pythra_util:is_dotted(FuncName) of
+      true ->
+         [Func, FuncName1] = pythra_util:split_dotted(FuncName),
+         func(Func, FuncName1, [], []);
+
+      false -> func(FuncName, Args, [])
+   end;
+func(Module, FuncName) when is_atom(Module) ->
+   func(Module, FuncName, [], []);
+func(Callable, Args) ->
+   func(Callable, Args, []).
+
+func(FuncName, Args, RawKwArgs) when is_atom(FuncName) andalso is_list(Args) ->
+   case pythra_util:is_dotted(FuncName) of
+      true ->
+         [Func, FuncName1] = pythra_util:split_dotted(FuncName),
+         func(Func, FuncName1, Args, RawKwArgs);
+      false ->
+         %% now call to the call_callable function in the python module 'pythra.obj'
+         KwArgs = pythra_util:proplist_to_binary(RawKwArgs),
+         pythra_call(pyt, pythra, 'obj.call_callable', [FuncName, Args, KwArgs])
+
+   end;
+func(Module, FuncName, Args) when is_atom(Module) ->
+   func(Module, FuncName, Args);
+func(Callable, Args, RawKwArgs) ->
+   KwArgs = pythra_util:proplist_to_binary(RawKwArgs),
+   pythra_call(pyt, pythra, 'obj.call_callable', [Callable, Args, KwArgs]).
+
+func(Module, FuncName, Args, KwArgs) ->
+   %% Now call to the call_func function in the Python module 'pythra.obj'
+   general_call(atom_to_binary(Module, latin1), FuncName, Args, KwArgs, 'obj.call_func').
+
+general_call(Obj, AttrName, Args, RawKwArgs, Type) ->
+   Attr = atom_to_binary(AttrName, latin1),
+   KwArgs = pythra_util:proplist_to_binary(RawKwArgs),
+   pythra_call(pyt, pythra, Type, [Obj, Attr, Args, KwArgs]).
