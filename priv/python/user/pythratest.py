@@ -1,2 +1,2 @@
-def test():
-    return "i am here!"
+def test(val):
+    return val

@@ -42,8 +42,9 @@ def timedeltas(value):
 
 
 def encode(value):
+    ret_value = value
     return compose(dicts,
                    dates,
                    datetimes,
                    times,
-                   timedeltas)(value)
+                   timedeltas)(ret_value)

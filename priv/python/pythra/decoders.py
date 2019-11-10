@@ -55,8 +55,9 @@ def timedeltas(value):
 
 
 def decode(value):
+    ret_value = value
     return compose(dicts,
                    dates,
                    datetimes,
                    times,
-                   timedeltas)(value)
+                   timedeltas)(ret_value)
