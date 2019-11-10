@@ -70,3 +70,15 @@ inheritance_list_of_maps_test() ->
    ?assertEqual([#{<<"val1">> => 55},#{<<"val1">> => 156}], pythra:method(P, Obj, get_value1)),
    pythra:stop(P).
 
+inheritance_list_of_maps2_test() ->
+   {ok, P} = pythra:start_link(),
+   LMap = [#{<<"df">> => <<"02.005">>,<<"id">> => <<"oi23u4oi23u4oi32u34oi2u3">>,<<"ts">> => 1573409579742,
+      <<"val">> => 6.987905296554468,<<"vs">> => 1},#{<<"df">> => <<"02.005">>,
+      <<"id">> => <<"oi23u4oi23u4oi32u34oi2u3">>,<<"ts">> => 1573409580743,
+      <<"val">> => 8.785576710041802,<<"vs">> => 1},#{<<"df">> => <<"02.005">>,
+      <<"id">> => <<"oi23u4oi23u4oi32u34oi2u3">>,<<"ts">> => 1573409581744,<<"val">> => 1.8826815278288,<<"vs">> => 1}],
+   Obj = pythra:init(P, 'user.childclass', 'Child', [LMap, #{<<"val2">> => 99}]),
+   ?assertEqual(LMap, pythra:method(P, Obj, get_value1)),
+   pythra:stop(P).
+
+

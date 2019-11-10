@@ -10,7 +10,7 @@
 -author("heyoka").
 
 %% API
--export([start_link/0, start_link/1, stop/1]).
+-export([start_link/0, start_link/1, stop/1, do/0]).
 
 -export([
    pythra_call/3, pythra_call/4,
@@ -21,6 +21,11 @@
    func/2, func/3, func/4, func/5,
    general_call/6]).
 
+do() ->
+   {ok, P} = pythra:start_link(),
+   Obj = pythra:init(P, 'user.pyclass', 'Pyclass', [#{<<"val1">> => 55, <<"val1">> => 156}]),
+%%   pythra:method(P, Obj, get_value1),
+   pythra:stop(P).
 
 start_link() ->
    start_link([]).
