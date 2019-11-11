@@ -20,7 +20,7 @@ simple_func_test() ->
 simple_func_map_test() ->
    {ok, P} = pythra:start_link(),
    Ret = pythra:func(P, 'user.pythratest', test, [#{<<"val">> => 5}]),
-   ?assertEqual(#{<<"val">> => 5}, Ret),
+   ?assertEqual({"Map",[{<<"val">>,5}]}, Ret),
    pythra:stop(P).
 
 
@@ -33,7 +33,7 @@ simple_class_test() ->
 object_map_dict_test() ->
    {ok, P} = pythra:start_link(),
    Obj = pythra:init(P, 'user.pyclass', 'Pyclass', [#{<<"val">> => 55}]),
-   ?assertEqual(#{<<"val">> => 55}, pythra:method(P, Obj, get_value)),
+   ?assertEqual({"Map",[{<<"val">>,55}]}, pythra:method(P, Obj, get_value)),
    pythra:stop(P).
 
 inheritance_test() ->
@@ -53,8 +53,8 @@ inheritance_tuple_test() ->
 inheritance_map_test() ->
    {ok, P} = pythra:start_link(),
    Obj = pythra:init(P, 'user.childclass', 'Child', [#{<<"val1">> => 55}, #{<<"val2">> => 99}]),
-   ?assertEqual(#{<<"val1">> => 55}, pythra:method(P, Obj, get_value1)),
-   ?assertEqual(#{<<"val2">> => 99}, pythra:method(P, Obj, get_value2)),
+   ?assertEqual({"Map",[{<<"val1">>,55}]}, pythra:method(P, Obj, get_value1)),
+   ?assertEqual({"Map",[{<<"val2">>,99}]}, pythra:method(P, Obj, get_value2)),
    pythra:stop(P).
 
 inheritance_list_test() ->
