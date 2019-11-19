@@ -27,7 +27,6 @@ start_link() ->
 start_link(Paths=[Path | _]) when is_list(Path) ->
    PythraPath = code:priv_dir(pythra) ++ "/python/",
    PPaths = [PythraPath | Paths],
-   io:format("paths: ~p~n", [PPaths]),
    Opts = [{python_path, PPaths}, {python, "python3"}],
    {ok, Py} = python:start_link(Opts),
    on_start(Py),
