@@ -24,13 +24,17 @@
 
 start_link() ->
    start_link([]).
-start_link(Path) when is_list(Path) ->
+start_link(Paths=[Path | _]) when is_list(Path) ->
    PythraPath = code:priv_dir(pythra) ++ "/python/",
-   Paths = [PythraPath, Path],
-   Opts = [{python_path, Paths}, {python, "python3"}],
+   PPaths = [PythraPath | Paths],
+   io:format("paths: ~p~n", [PPaths]),
+   Opts = [{python_path, PPaths}, {python, "python3"}],
    {ok, Py} = python:start_link(Opts),
    on_start(Py),
-   {ok, Py}.
+   {ok, Py};
+start_link(Path) when is_list(Path) ->
+   start_link([Path]).
+
 
 on_start(ProcPid) ->
    python:call(ProcPid, pythra, 'init.setup', []).
