@@ -45,9 +45,6 @@ Object instantiation and method call
     4> pythra:stop(P).
 ### python
 
-    from erlport.erlterms import Map
-
-
     class Pyclass:
 
         def __init__(self, value):
