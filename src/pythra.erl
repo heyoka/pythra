@@ -21,13 +21,14 @@
    func/2, func/3, func/4, func/5,
    general_call/6]).
 
+-define(PYTHON_VERSION, "python3").
 
 start_link() ->
    start_link([]).
 start_link(Paths=[Path | _]) when is_list(Path) ->
    PythraPath = filename:join(code:priv_dir(pythra), "python"),
    PPaths = [PythraPath | Paths],
-   Opts = [{python_path, PPaths}, {python, "python3"}],
+   Opts = [{python_path, PPaths}, {python, ?PYTHON_VERSION}],
    {ok, Py} = python:start_link(Opts),
    on_start(Py),
    {ok, Py};
