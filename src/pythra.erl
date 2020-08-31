@@ -25,7 +25,7 @@
 start_link() ->
    start_link([]).
 start_link(Paths=[Path | _]) when is_list(Path) ->
-   PythraPath = code:priv_dir(pythra) ++ "/python/",
+   PythraPath = filename:join(code:priv_dir(pythra), "python"),
    PPaths = [PythraPath | Paths],
    Opts = [{python_path, PPaths}, {python, "python3"}],
    {ok, Py} = python:start_link(Opts),
