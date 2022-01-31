@@ -19,7 +19,7 @@
    attr/3,
    method/3, method/4, method/5,
    func/2, func/3, func/4, func/5,
-   general_call/6]).
+   general_call/6, cast/2]).
 
 -define(PYTHON_VERSION, "python3").
 
@@ -53,6 +53,9 @@ pythra_call(Python, Mod, Func) ->
 
 pythra_call(Python, Mod, Func, Args) ->
    python:call(Python, Mod, Func, Args).
+
+cast(Python, Message) ->
+   python:cast(Python, Message).
 
 %%% Creating Python class instances
 %%%
