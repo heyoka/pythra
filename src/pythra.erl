@@ -19,7 +19,7 @@
    attr/3,
    method/3, method/4, method/5,
    func/2, func/3, func/4, func/5,
-   general_call/6, cast/2]).
+   general_call/6, cast/2, get_py_version/1]).
 
 -define(PYTHON_VERSION, "python3").
 
@@ -38,6 +38,9 @@ start_link(Path) when is_list(Path) ->
 
 on_start(ProcPid) ->
    python:call(ProcPid, pythra, 'init.setup', []).
+
+get_py_version(Py) ->
+   func(Py, 'pythra.python_version', get_python_version, []).
 
 stop(P) ->
    python:stop(P).
